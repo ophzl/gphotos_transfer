@@ -23,11 +23,11 @@ rm -rf ./Google\ Photos
 
 # Loop over folders to recover metadatas (/!\ NOT ALBUMS YET /!\)
 find ./ -type d -name "Photos *" | while read final_dir; do 
-    nom_dossier=$(basename "$final_dir")
-    cd "$nom_dossier"
-    printf "\n=============== $nom_dossier ===============\n"
+    folder=$(basename "$final_dir")
+    cd "$folder"
+    printf "\n=============== $folder ===============\n"
     # Recover metadatas
     exiftool -d %s -tagsfromfile '%d/%F.json' '-GPSLatitude*<${GeoDataLatitude;$_ = undef if $_ eq "0.0"}' '-GPSLongitude*<${GeoDataLongitude;$_ = undef if $_ eq "0.0"}' '-Caption-Abstract<Description' '-Description<Description' '-XMP-xmp:Rating<${Favorited;$_=5 if $_=~/true/i}' '-AllDates<PhotoTakenTimeTimestamp' -execute '-FileCreateDate<ExifIFD:DateTimeOriginal' '-FileModifyDate<ExifIFD:DateTimeOriginal' -common_args -overwrite_original_in_place -ext jpg .
-    printf "\n=============== EXIT $nom_dossier ===============\n"
+    printf "\n=============== EXIT $folder ===============\n"
     cd ..;
 done 
